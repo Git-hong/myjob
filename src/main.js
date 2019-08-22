@@ -4,8 +4,11 @@ import router from './router'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import './styles/index.less'
+import VeeValidate from 'vee-validate'
 
 Vue.use(Vant)
+Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
 

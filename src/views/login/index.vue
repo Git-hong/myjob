@@ -5,8 +5,8 @@
       <van-field
         v-model="user.mobile"
         v-validate="'required|min:11'"
-        name="mobile"
-        :error-message="errors.first('mobile')"
+        name="手机号"
+        :error-message="errors.first('手机号')"
         label="手机号"
         placeholder="请输入手机号"
         required
@@ -16,8 +16,8 @@
       <van-field
         v-model="user.code"
         v-validate="'required|min:6'"
-        name="code"
-        :error-message="errors.first('code')"
+        name="验证码"
+        :error-message="errors.first('验证码')"
         label="验证码"
         placeholder="请输入验证码"
         required
@@ -32,6 +32,8 @@
 
 <script>
 import { login } from '@/api/user.js'
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'loginIndex',
   data () {
@@ -43,7 +45,11 @@ export default {
       isLoginLoading: false
     }
   },
+  created () {
+    this.customValidateMessages()
+  },
   methods: {
+    ...mapMutations(['setUser']),
     async onLogin () {
       try {
         this.$validator.validate().then(async valid => {
@@ -55,6 +61,7 @@ export default {
 
           const { data } = await login(this.user)
           console.log(data)
+          this.setUser(data.data)
 
           // 跳转到首页
           // this.$router.push({ name: 'home' })
@@ -69,6 +76,22 @@ export default {
         //   无论登录成功还是失败，都要把loading停止
         this.isLoginLoading = false
       }
+    },
+
+    customValidateMessages () {
+      // 校验规则对象
+      const dict = {
+        custom: {
+          手机号: {
+            required: '手机号不能为空'
+          }
+        // 验证码: {
+        //   required: () => 'Your name is empty'
+        // }
+        }
+      }
+      // 生效的api
+      this.$validator.localize('zh_CN', dict)
     }
   }
 }
